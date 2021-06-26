@@ -1,99 +1,115 @@
+<?php
+
+include "db.php";
+$createSQL = "create table if not exists accounts(
+accno varchar(30) primary key,
+pass varchar(40),
+name varchar(15),
+address varchar(30),
+account_type varchar(15),
+balance int(10));";
+$result = $conn->query($createSQL);
+
+if (isset($_POST['submit'])) {
+$accno = $_POST['accno'];
+$pass = $_POST['pass'];
+
+$checkUser = "select * from accounts where accno='" . $accno . "' and pass='" . $pass . "';";
+if ($res = mysqli_query($conn, $checkUser)) {
+if (mysqli_num_rows($res) > 0) {
+session_start();
+$_SESSION['accno'] = $accno;
+header('Location: phpmain.php');
+exit();
+} else {
+echo '<script type="text/javascript">document.getElementById("error").style.display="inline-block";</script>';
+
+echo "<h2>username  or password error!!!</h2>";
+}
+} else {
+echo "ERROR: Could not able to execute $sql. "
+. mysqli_error($link);
+}
+}
+
+
+?>
+
+
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
-<meta charset="utf-8">
-<title>Welcome to bank application.</title>
-<link rel="stylesheet"  href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css">
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Document</title>
 
+<style>
 
-<style type="text/css">
 body{
-background-color: cadetblue;
-}
-.container{
 
-background-color: white;
-border: 4px solid blue;
-border-radius: 25px;
-text-align: center;
-text-decoration: underline;
+background-color:  teal;
 }
 
-table{
-border: 2px solid black;
 
-margin-left: 450px;
 
-}
-table,tr{
-border: 2px solid black;
-
-}
-
-table, tr, td{
-
-border: 3px solid black;
-padding: 10px;
-}
 </style>
 </head>
+
 <body>
 
+	  <h1>Welcome to Login Page...  </h1>
 <div class="container">
-
-<header><h1>Welcome to Bank -B..</h1></header>
-
-<hr>
-
 <form action="" method="post">
-
-
 <table>
-
 <tr>
-<td>Enter Account number</td>
-<td><input type="number" name="accno" required></td>
-
+<td><label for="">Account Number</label></td>
+<td><input type="text" name="accno" id="" required></td>
 </tr>
-
 <tr>
-<td>Customer name:</td>
-<td><input type="text" name="cname" required></td>
-
+<td><label for="">Password</label></td>
+<td><input type="password" name="pass" id="" required></td>
 </tr>
-
 <tr>
-<td>Address:</td>
-<td><input type="text" name="Address" required></td>
-
+<td colspan="2" id="error">User name or Password is wrong</td>
 </tr>
-
 <tr>
-<td>Account type:</td>
-<td><input type="text" name="actype" required></td>
-
+<td colspan="2">
+<input type="submit" value="submit" name="submit">
+</td>
 </tr>
-
-<tr>
-<td>balance:</td>
-<td><input type="number" name="balance" required></td>
-
-</tr>
-
 
 </table>
-<hr>
-
-<div class="buttons">
-
-<button class="btn btn-primary" name="create">create Acc</button> 	<button class="btn btn-primary" name="deposit">Deposit</button> 
-<button class="btn btn-primary" name="withdraw">Withdraw</button>   	<button class="btn btn-primary" name="balance">Balnce Enquiry</button> 
-
-
-
+</form>
 </div>
+<style>
+.container {
+position: absolute;
+top: 50%;
+left: 50%;
+transform: translate(-50%, -50%);
+background-color: #333;
+padding: 30px;
+border-radius: 10px;
+}
+
+label {
+color: white;
+}
+
+input {
+display: block;
+margin: 20px auto;
+}
+
+#error {
+color: red;
+display: none;
+}
+</style>
 
 
-</div>
 </body>
+
 </html>
